@@ -52,11 +52,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'libraryproject.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR],
+        'DIRS': [TEMPLATE_DIR],  # المسار المحدد للقوالب
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +66,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'libraryproject.wsgi.application'
 
