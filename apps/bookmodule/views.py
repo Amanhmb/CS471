@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count, Sum, Avg, Max, Min
 
-from .models import Book ,Address ,Student 
+from .models import Book ,Address ,Student , Department
 # Create your views here.
 from django.db.models import Q 
 
@@ -114,3 +114,69 @@ def task5(request):
 def task7(request):
     cities = Address.objects.annotate(student_count=Count('student'))
     return render(request, 'bookmodule/task7.html', {'cities': cities})
+
+
+def listbooks(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/listbooks.html', {'books': books})
+
+def listbooks(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/listbooks.html', {'books':books})
+
+def addbook(request):
+    if request.method =="POST":
+        Book.objects.create(
+            title= request.POST['title'],
+            author= request.POST['author']
+            )
+        return redirect('list_books')
+    return render(request, 'bookmodule/addbook.html')
+
+
+def editbook(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == "POST":
+        book.title = request.POST['title']
+        book.author = request.POST['author']
+        book.save()
+        return redirect('list_books')
+    return render(request, 'bookmodule/editbook.html', {'book':book})
+
+
+def deletebook(request, id):
+    book = get_object_or_404(Book, id=id)
+    book.delete()
+    return redirect('list_books')
+
+def task22(request):
+    departments = Department.objects.annotate(student_count=Count('students'))
+    return render(request, 'bookmodule/task22.html', {'departments':departments})
+
+
+def task33(request):
+    courses = Course.objects.annotate(student_count=Count('students'))
+    return render(request, 'bookmodule/task33.html', {'courses':courses})
+
+
+def task44(request):
+    departments = Department.objects.annotate(oldest_student_id=Min('students__id'))
+    
+    department_data = []
+
+    for department in departments:
+        if department.oldest_student_id is not None:
+            oldest_student = department.students_set.get(id=department.oldest_student_id)
+            department_data.append(
+                {
+                    'department_name': department.name,
+                    'oldest_student_name': oldest_student.name
+                }
+            )
+
+    return render(request, 'bookmodule/task44.html', {'department_data': department_data})
+
+
+def task55(request):
+    departments = Department.objects.annotate(student_count=Count('students')).filter(student_count__gt=2).order_by("-student_count")
+    return render(request, 'bookmodule/task55.html', {'departments':departments})
