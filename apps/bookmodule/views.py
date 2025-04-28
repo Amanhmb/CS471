@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.db.models import Count, Sum, Avg, Max, Min
+from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from .forms import BookForm
+from .forms import StudentForm
 
-from .models import Book ,Address ,Student , Department
+from .models import Book ,Address ,Student , Department , Course
 # Create your views here.
 from django.db.models import Q 
 
@@ -115,40 +119,6 @@ def task7(request):
     cities = Address.objects.annotate(student_count=Count('student'))
     return render(request, 'bookmodule/task7.html', {'cities': cities})
 
-
-def listbooks(request):
-    books = Book.objects.all()
-    return render(request, 'bookmodule/listbooks.html', {'books': books})
-
-def listbooks(request):
-    books = Book.objects.all()
-    return render(request, 'bookmodule/listbooks.html', {'books':books})
-
-def addbook(request):
-    if request.method =="POST":
-        Book.objects.create(
-            title= request.POST['title'],
-            author= request.POST['author']
-            )
-        return redirect('list_books')
-    return render(request, 'bookmodule/addbook.html')
-
-
-def editbook(request, id):
-    book = get_object_or_404(Book, id=id)
-    if request.method == "POST":
-        book.title = request.POST['title']
-        book.author = request.POST['author']
-        book.save()
-        return redirect('list_books')
-    return render(request, 'bookmodule/editbook.html', {'book':book})
-
-
-def deletebook(request, id):
-    book = get_object_or_404(Book, id=id)
-    book.delete()
-    return redirect('list_books')
-
 def task22(request):
     departments = Department.objects.annotate(student_count=Count('students'))
     return render(request, 'bookmodule/task22.html', {'departments':departments})
@@ -180,3 +150,100 @@ def task44(request):
 def task55(request):
     departments = Department.objects.annotate(student_count=Count('students')).filter(student_count__gt=2).order_by("-student_count")
     return render(request, 'bookmodule/task55.html', {'departments':departments})
+
+
+def listbooks(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/listbooks.html', {'books':books})
+
+def addbook(request):
+    if request.method =="POST":
+        Book.objects.create(
+            title= request.POST['title'],
+            author= request.POST['author']
+            )
+        return redirect('list_books')
+    return render(request, 'bookmodule/addbook.html')
+
+
+def editbook(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == "POST":
+        book.title = request.POST['title']
+        book.author = request.POST['author']
+        book.save()
+        return redirect('list_books')
+    return render(request, 'bookmodule/editbook.html', {'book':book})
+
+
+def deletebook(request, id):
+    book = get_object_or_404(Book, id=id)
+    book.delete()
+    return redirect('list_books')
+
+def listbooks2(request):
+    books = Book.objects.all()
+    return render(request, 'bookmodule/listbooks2.html', {'books':books})
+
+
+def addbook2(request):
+    if request.method =="POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books2')
+    else:
+        form = BookForm()
+    return render(request, 'bookmodule/addbook2.html', {'form':form})
+
+
+def editbook2(request, id):
+    book = get_object_or_404(Book, id=id)
+    if request.method == "POST":
+        form = BookForm(request.POST, instance = book)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books2')
+    else:
+        form = BookForm(instance = book)
+    return render(request, 'bookmodule/editbook2.html', {'form':form})
+
+
+def deletebook2(request, id):
+    book = get_object_or_404(Book, id=id)
+    book.delete()
+    return redirect('list_books2')
+
+############
+
+def list_students(request):
+    students = Student.objects.all()
+    return render(request, 'bookmodule/list_students.html', {'students':students})
+
+def addstudent(request):
+    if request.method =="POST":
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm()
+    return render(request, 'bookmodule/addstudent.html', {'form':form})
+
+
+def editstudent(request, id):
+    student = get_object_or_404(Student, id=id)
+    if request.method == "POST":
+        form = StudentForm(request.POST, instance = student)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm(instance = student)
+    return render(request, 'bookmodule/editstudent.html', {'form':form})
+
+
+def deletestudent(request, id):
+    Students = get_object_or_404(Student, id=id)
+    Students.delete()
+    return redirect('list_students')

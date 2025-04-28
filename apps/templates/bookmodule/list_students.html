@@ -1,9 +1,10 @@
 {% extends "layouts/base.html" %} 
 {% load static %} 
 
-{% block title %} Task 2 Page {% endblock title %} 
+{% block title %} List of Students Page {% endblock title %} 
 
 {% block stylesheets %}
+
 <style>
     h1 {
         background-color: pink; 
@@ -48,22 +49,27 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<a href="{% url 'add_book' %}">Add New Book</a>
+
+<a href="{% url 'add_student' %}">Add New Book</a>
+<br/>
+
 <table>
-<tr>
-    <th> title</th>
-    <th> auther </th>
-    <th>Edit</th>
- <th>Delete</th>
-</tr>
-{% for book in books %}
-<tr>
-    <td>{{ book.title }} </td>
-    <td>{{ book.author }} </td>
-    <td><a href="{% url 'edit_book' book.id%}">edit this book</a></td>
-    <td><a href="{% url 'delete_book' book.id%}">delete this book</a></td>
-</tr>
-{% endfor %}
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Address</th>
+        <th>edit</th>
+        <th>delete</th>
+        </tr>
+    {% for student in students %}
+    <tr>
+        <td>{{ student.name }}</td>
+        <td>{{ student.age }}</td>
+        <td>{{ student.address.city }}</td>
+        <td><a href="{% url 'edit_student' student.id%}">edit this student</a></td>
+        <td><a href="{% url 'delete_student' student.id%}">delete this student</a></td>
+    </tr>
+    {% endfor %}
 </table>
-<hr>
+
 {% endblock content %}

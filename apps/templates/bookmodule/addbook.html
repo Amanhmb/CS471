@@ -1,9 +1,10 @@
 {% extends "layouts/base.html" %} 
 {% load static %} 
 
-{% block title %} Task 2 Page {% endblock title %} 
+{% block title %} Task 5 Page {% endblock title %} 
 
 {% block stylesheets %}
+
 <style>
     h1 {
         background-color: pink; 
@@ -48,22 +49,10 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<a href="{% url 'add_book' %}">Add New Book</a>
-<table>
-<tr>
-    <th> title</th>
-    <th> auther </th>
-    <th>Edit</th>
- <th>Delete</th>
-</tr>
-{% for book in books %}
-<tr>
-    <td>{{ book.title }} </td>
-    <td>{{ book.author }} </td>
-    <td><a href="{% url 'edit_book' book.id%}">edit this book</a></td>
-    <td><a href="{% url 'delete_book' book.id%}">delete this book</a></td>
-</tr>
-{% endfor %}
-</table>
-<hr>
+<form method="POST">
+    {% csrf_token %}
+    <input name="title" placeholder="Title" required><br>
+    <input name="author" placeholder="Author" required><br>
+    <button type="submit">Add</button>
+</form>
 {% endblock content %}
